@@ -1,0 +1,71 @@
+import express from "express";
+const app=express();
+app.use(express.json());
+const PORT=process.env.PORT||3000;
+const page=String.raw`<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prompt Forge</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#09090b;color:#f4f4f5}button,textarea,select{font:inherit}header{height:72px;border-bottom:1px solid #27272a;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#0d0d10}.brand{font-weight:800;letter-spacing:-.03em;font-size:21px}.brand span{color:#a78bfa}.badge{font-size:11px;border:1px solid #3f3f46;padding:6px 10px;border-radius:999px;color:#a1a1aa}.wrap{max-width:1200px;margin:auto;padding:48px 24px}.hero{max-width:850px}.eyebrow{color:#a78bfa;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800}.hero h1{font-size:52px;line-height:1.02;margin:12px 0}.hero p{color:#a1a1aa;font-size:17px;line-height:1.6}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}.panel{background:#111114;border:1px solid #27272a;border-radius:18px;padding:22px}.label{font-size:12px;font-weight:800;color:#d4d4d8;margin-bottom:10px;text-transform:uppercase;letter-spacing:.08em}textarea{width:100%;min-height:260px;background:#09090b;border:1px solid #3f3f46;border-radius:12px;padding:16px;color:#f4f4f5;resize:vertical;outline:none}textarea:focus{border-color:#8b5cf6}.row{display:flex;gap:10px;margin-top:12px}.select{background:#18181b;border:1px solid #3f3f46;color:#fff;border-radius:10px;padding:10px;flex:1}button{border:0;border-radius:10px;padding:11px 18px;background:#7c3aed;color:white;font-weight:800;cursor:pointer}button:hover{background:#8b5cf6}.secondary{background:#27272a}.output{white-space:pre-wrap;line-height:1.6;color:#d4d4d8;min-height:260px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chip{border:1px solid #3f3f46;border-radius:999px;padding:7px 10px;font-size:12px;color:#a1a1aa}.features{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}.feature{padding:16px;background:#111114;border:1px solid #27272a;border-radius:14px}.feature b{display:block;margin-bottom:6px}.feature small{color:#a1a1aa;line-height:1.5}@media(max-width:800px){.grid,.features{grid-template-columns:1fr}.hero h1{font-size:40px}}
+</style></head><body><header><div class="brand">PROMPT <span>FORGE</span></div><div class="badge">MAD MODE ENGINE</div></header><main class="wrap"><section class="hero"><div class="eyebrow">AI Prompt Engineering Platform</div><h1>Don't write prompts.<br>Engineer them.</h1><p>Turn a rough idea into a machine-grade instruction system. Prompt Forge decomposes intent, finds ambiguity, adds rules, failure handling, output contracts and tests.</p></section><section class="grid"><div class="panel"><div class="label">Your raw request</div><textarea id="input" placeholder="Example: Build an AI receptionist for my HVAC business that answers calls and books appointments."></textarea><div class="row"><select id="model" class="select"><option>GPT</option><option>Claude</option><option>Groq / Open Models</option><option>Microsoft / Copilot</option></select><button onclick="forge()">Forge Prompt</button></div><div class="chips"><span class="chip">Intent</span><span class="chip">Context</span><span class="chip">Rules</span><span class="chip">Tools</span><span class="chip">Failure modes</span><span class="chip">Tests</span></div></div><div class="panel"><div class="label">Engineered output</div><div id="output" class="output">Your production prompt will appear here.</div><div class="row"><button class="secondary" onclick="copyOut()">Copy</button><button class="secondary" onclick="autopsy()">Run Autopsy</button></div></div></section><section class="features"><div class="feature"><b>Prompt IR</b><small>Structured intermediate representation before final compilation.</small></div><div class="feature"><b>Mad Mode</b><small>Attack ambiguity, edge cases and hidden requirements.</small></div><div class="feature"><b>Failure Analysis</b><small>Identify hallucination, tool and instruction failures.</small></div><div class="feature"><b>Test Generation</b><small>Generate behavioral tests before production use.</small></div></section></main><script>
+function forge(){const x=document.getElementById('input').value.trim(),m=document.getElementById('model').value;if(!x)return alert('Enter a request first.');document.getElementById('output').textContent=`ROLE
+You are a senior AI systems architect and prompt engineer.
+
+MISSION
+Transform the user's request into a reliable, production-ready instruction system.
+
+TARGET MODEL
+${m}
+
+RAW REQUEST
+${x}
+
+OBJECTIVES
+1. Identify the true user intent.
+2. Extract required inputs and missing variables.
+3. Define measurable success criteria.
+4. Add explicit business rules and constraints.
+5. Define tool-use conditions when tools are available.
+6. Anticipate failure modes, ambiguity and edge cases.
+7. Create representative examples and behavioral tests.
+8. Produce a precise output contract.
+
+DECISION LOGIC
+IF required information is missing:
+  Ask only the minimum necessary clarification.
+ELSE:
+  Continue to solution design.
+IF a tool is required:
+  Use it only when its stated condition is satisfied.
+IF evidence is unavailable:
+  Never invent facts.
+IF instructions conflict:
+  Follow the higher-priority instruction and flag the conflict.
+
+FAILURE MODES TO DEFEND AGAINST
+- Unsupported assumptions
+- Hallucinated facts
+- Missing required fields
+- Incorrect tool selection
+- Contradictory instructions
+- Prompt injection
+- Invalid output format
+- Infinite or unnecessary workflow
+
+OUTPUT CONTRACT
+Return:
+1. System prompt
+2. Variables
+3. Tool definitions
+4. Decision logic
+5. Edge cases
+6. Failure handling
+7. Test cases
+8. Validation checklist
+
+QUALITY GATE
+Do not finalize until the instruction system is explicit, testable, internally consistent and usable by another AI system.`;
+}
+function copyOut(){navigator.clipboard?.writeText(document.getElementById('output').textContent)}
+function autopsy(){const o=document.getElementById('output');o.textContent+='\n\nAUTOPSY\n✓ Role defined\n✓ Mission defined\n✓ Decision logic defined\n✓ Failure modes defined\n✓ Output contract defined\n✓ Validation gate defined\n\nNext: connect a model API to run live evaluations.'}
+</script></body></html>`;
+app.get("/",(_,res)=>res.type("html").send(page));
+app.get("/health",(_,res)=>res.json({status:"ok",app:"Prompt Forge"}));
+app.listen(PORT,"0.0.0.0",()=>console.log("Prompt Forge listening on "+PORT));
